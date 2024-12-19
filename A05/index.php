@@ -1,17 +1,8 @@
 <?php
 include 'connect.php';
 include 'class.php';
-
-$islands = array();
-
-$islandQuery = "SELECT * FROM islandsofpersonality";
-$islandResult = executeQuery($islandQuery);
-
-while ($islandRow = mysqli_fetch_assoc($islandResult)) {
-    
-    $island = new IslandofPersonalities($islandRow['name'], $islandRow['shortDescription'], $islandRow['color'], $islandRow['image']);
-    array_push($islands, $island);
-}
+include 'islands.php';
+include 'content.php';
 
 ?>
 <!doctype html>
@@ -42,7 +33,7 @@ while ($islandRow = mysqli_fetch_assoc($islandResult)) {
             background: linear-gradient(135deg, #FFD700, #1E90FF, #FF4500, #32CD32, #800080);
             background-size: 400% 400%;
             animation: gradientAnimation 10s ease infinite;
-            height: 100vh;
+
             margin: 0;
         }
 
@@ -141,7 +132,62 @@ while ($islandRow = mysqli_fetch_assoc($islandResult)) {
                  ?>
             </div>
         </div>
+    
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Chivalry Island</h1>
+                    <?php
+                        foreach ($content1 as $content) {
+                            echo $content->generateContent();
+                        }
+                    ?>
 
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Chivalry Island</h1>
+                    <?php
+                        foreach ($content2 as $content) {
+                            echo $content->generateContent();
+                        }
+                    ?>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Chivalry Island</h1>
+                    <?php
+                        foreach ($content3 as $content) {
+                            echo $content->generateContent();
+                        }
+                    ?>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Chivalry Island</h1>
+                    <?php
+                        foreach ($content4 as $content) {
+                            echo $content->generateContent();
+                        }
+                    ?>
+
+                </div>
+            </div>
+        </div>
 
 
 
