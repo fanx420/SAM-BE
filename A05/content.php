@@ -35,7 +35,7 @@
     $content4 = array();
 
     $contentQuery4 = 'SELECT * FROM islandContents WHERE islandOfPersonalityID = 4';
-    $contentResult = executeQuery($contentQuery2);
+    $contentResult = executeQuery($contentQuery4);
 
 
     while ($contentRow = mysqli_fetch_assoc($contentResult)) {

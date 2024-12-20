@@ -58,13 +58,7 @@ include 'content.php';
         .card {
             background-color: rgba(255, 255, 255, 0.5);
             overflow-y: auto;
-            height: 450px;
-            transition: transform 0.2 ease box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-        .card:hover{
-            transform: scale(1.03);
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            height: 450px;  
         }
 
         .card-body img{
@@ -87,21 +81,7 @@ include 'content.php';
                 <i class="fa fa-remove"></i>
             </a>
             <img src="../assets/profile.png" style="width:45%;" class="w3-round"><br><br>
-            <h4><b>PORTFOLIO</b></h4>
-            <p class="w3-text-grey">Template by W3.CSS</p>
-        </div>
-        <div class="w3-bar-block">
-            <a href="#portfolio" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-th-large fa-fw w3-margin-right"></i>PORTFOLIO</a>
-            <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>ABOUT</a>
-            <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>CONTACT</a>
-        </div>
-        <div class="w3-panel w3-large">
-            <i class="fa fa-facebook-official w3-hover-opacity"></i>
-            <i class="fa fa-instagram w3-hover-opacity"></i>
-            <i class="fa fa-snapchat w3-hover-opacity"></i>
-            <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-            <i class="fa fa-twitter w3-hover-opacity"></i>
-            <i class="fa fa-linkedin w3-hover-opacity"></i>
+            <h4><b>Kaleb's Island of personalities</b></h4>
         </div>
     </nav>
 
@@ -116,12 +96,12 @@ include 'content.php';
             <a href="#"><img src="../assets/profile.png" style="width:100px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
             <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
             <div class="w3-container">
-                <h1 class="mt-5"><b>Islands of Personalities</b></h1>
+                <h1 class="mt-3"><b>Islands of Personalities</b></h1>
             </div>
         </header>
 
         <!-- First Photo Grid-->
-        <div class="container mt-5">
+        <div class="container mt-2">
             <div class="row">
                 <?php
                 foreach ($islands as $island) {
@@ -150,7 +130,7 @@ include 'content.php';
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h1>Chivalry Island</h1>
+                    <h1>Independence Island</h1>
                     <?php
                         foreach ($content2 as $content) {
                             echo $content->generateContent();
@@ -164,7 +144,7 @@ include 'content.php';
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h1>Chivalry Island</h1>
+                    <h1>Discipline Island</h1>
                     <?php
                         foreach ($content3 as $content) {
                             echo $content->generateContent();
@@ -178,7 +158,7 @@ include 'content.php';
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h1>Chivalry Island</h1>
+                    <h1>Courage Island</h1>
                     <?php
                         foreach ($content4 as $content) {
                             echo $content->generateContent();
@@ -203,6 +183,8 @@ include 'content.php';
                 document.getElementById("myOverlay").style.display = "none";
             }
         </script>
+
+            
 
 </body>
 
