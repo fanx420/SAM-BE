@@ -1,3 +1,10 @@
+<?php
+include 'connect.php';
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,6 +31,15 @@
       width: 50%; 
       border-radius: 10px;
     }
+    .btn{
+      margin: auto;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .card{
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
@@ -39,10 +55,26 @@
   <div class="container my-5">
     <div class="row">
       <div class="col-12">
-        <div class="card">
-            
+        <div class="card shadow">
+            <h1 class="text-center m-4">SIGN UP</h1>
           <div class="card-body">
-                
+                <form action="user_signup.php" method="post">
+                    <input name="firstName" type="text" placeholder="First name" class="form-control my-4" required>
+                    <input name="lastName" type="text" placeholder="Last name" class="form-control my-4" required>
+                    <input name="userName" type="text" placeholder="Username" class="form-control my-4" required>
+                    <select name="role" id="" class="form-control" required>
+                      <option class="text-muted" value="">--Select Role--</option>
+                      <option value="admin">Admin</option>
+                      <option value="user">User</option>
+                    </select>
+                    <input name="password" type="password" placeholder="Password" class="form-control my-4" required>
+                  </div>
+                  <input type="submit" value="Sign Up" class="btn btn-primary ">
+
+                  <p class="text-center my-4">
+                    Already have an account? <a href="login.php">Login</a>
+                  </p>
+                </form>
           </div>
         </div>
       </div>
