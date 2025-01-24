@@ -4,15 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>TMS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/logo.png">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
     }
 
     .navbar {
+      background-color: #FFB114;
       border-bottom-width: 2px;
       border-bottom-color: black;
       border-bottom-style: solid;
@@ -49,7 +51,7 @@
     <div class="row">
       <div class="col-12">
         <div class="card shadow">
-            <h1 class="text-center m-4">SIGN UP</h1>
+            <h1 class="text-center m-4">LOGIN</h1>
           <div class="card-body">
                 <form action="user_login.php" method="POST">
                     <input name="userName" type="text" placeholder="Username" class="form-control my-4" required>

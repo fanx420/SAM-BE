@@ -6,6 +6,31 @@ if (empty($_SESSION['userName'])) {
     header("Location: login.php");
     exit;
 }
+
+$tasks = [];
+$userName = $_SESSION['userName'];
+
+$sql = "SELECT id FROM tbl_user WHERE userName = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('s', $userName);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($userId);
+$stmt->fetch();
+
+if ($userId > 0) {
+    $sql = "SELECT * FROM tbl_task WHERE user_id = ? AND status = 'dropped'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $tasks = $result->fetch_all(MYSQLI_ASSOC);
+    }
+} else {
+    echo " script>alert('Invalid user.')</script>"; 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,16 +38,18 @@ if (empty($_SESSION['userName'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Olympic+Sans&display=swap" rel="stylesheet">
-    
+    <link rel="icon" href="assets/logo.png">
+
     <style>
         body {
             font-family: 'Olympic Sans', sans-serif;
         }
 
         .navbar {
+            background-color: #FFB114;
             border-bottom-width: 2px;
             border-bottom-color: black;
             border-bottom-style: solid;
@@ -30,15 +57,15 @@ if (empty($_SESSION['userName'])) {
 
         .sidebar {
             position: fixed;
-            top: 55px; 
+            top: 55px;
             left: 0;
-            width: 250px; 
+            width: 250px;
             border-right-width: 2px;
             border-right-color: black;
             border-right-style: solid;
             padding: 20px;
-            height: calc(100vh - 55px); 
-            overflow-y: auto; 
+            height: calc(100vh - 55px);
+            overflow-y: auto;
             background-color: #f8f9fa;
         }
 
@@ -53,6 +80,7 @@ if (empty($_SESSION['userName'])) {
         }
 
         .sidebar .profile img {
+            margin-top: 10px;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -86,13 +114,13 @@ if (empty($_SESSION['userName'])) {
 
         @media screen and (max-width: 768px) {
             .sidebar {
-                width: 100%; 
-                position: relative; 
+                width: 100%;
+                position: relative;
                 height: auto;
             }
 
             .content {
-                margin-left: 0; 
+                margin-left: 0;
             }
         }
     </style>
@@ -116,8 +144,8 @@ if (empty($_SESSION['userName'])) {
                     <p>Hello <?php echo $_SESSION['userName']; ?></p>
                 </div>
                 <div class="menu my-5">
-                    <a href="user_dashboard.php" >Tasks</a>
-                    <a href="completed.php" >Completed</a>
+                    <a href="user_dashboard.php">Tasks</a>
+                    <a href="completed.php">Completed</a>
                     <a href="dropped.php" class="active">Dropped</a>
                 </div>
 
@@ -126,8 +154,24 @@ if (empty($_SESSION['userName'])) {
 
 
             <div class="col-md-9 content my-5">
-                <h1>To do</h1>
-                <p>This is where your main content goes. The sidebar remains fixed on the left while this section scrolls.</p>
+                <h2 class="fw-bold mt-3">Dropped</h2>
+                <div class="row">
+                    <?php if (count($tasks) > 0): ?>
+                        <?php foreach ($tasks as $task): ?>
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm" style="background-color:  #F0282D;">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?php echo htmlspecialchars($task['taskName']); ?></h5>
+                                        <p class="card-text"><?php echo htmlspecialchars($task['taskDescription']); ?></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No tasks assigned.</p>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>

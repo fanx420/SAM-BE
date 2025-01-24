@@ -7,7 +7,7 @@ if (empty($_SESSION['userName'] || empty($_SESSION['role'] || empty($_SESSION['p
     exit;
 }
 
-$dataSql = "SELECT firstName, lastName, userName, dateCreated FROM tbl_user WHERE role = 'user'";
+$dataSql = "SELECT id, firstName, lastName, userName, dateCreated FROM tbl_user WHERE role = 'user'";
 $result = executeQuery($dataSql);
 $users = $result->fetch_all(MYSQLI_ASSOC);
 ?>
@@ -17,9 +17,10 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Olympic+Sans&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/logo.png">
 
     <style>
         body {
@@ -27,6 +28,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
         }
 
         .navbar {
+            background-color: #FFB114;
             border-bottom-width: 2px;
             border-bottom-color: black;
             border-bottom-style: solid;
@@ -57,6 +59,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
         }
 
         .sidebar .profile img {
+            margin-top: 10px;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -129,7 +132,8 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
 
 
             <div class="col-md-9 content my-5">
-                <div class="table-responsive">
+                <div class="table-responsive mt-5">
+                    <h2 class="fw-bold mt-3">Users</h2>
                     <table class="table table-bordered table-striped align-middle">
                         <thead class="table-dark">
                             <tr>

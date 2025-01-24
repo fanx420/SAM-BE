@@ -8,31 +8,47 @@ if (empty($_SESSION['userName'] || empty($_SESSION['role'] || empty($_SESSION['p
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $user_id = $_GET['id'];
 
+    $sql = "SELECT id, firstName, lastName, userName FROM tbl_user WHERE id = $user_id";
+    $stmt = $conn->prepare($sql);
+    $result = executeQuery($sql);
+    $user = $result->fetch_assoc();
 
+    if (!$user){
+        echo"User not found";
+        exit;
+    }
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'];
+    $user_id = $_POST['id'];
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $username = $_POST['username'];
 
-
     $updateSql = "UPDATE tbl_user SET firstName = ?, lastName = ?, userName = ? WHERE id = ?";
     $stmt = $conn->prepare($updateSql);
+
+
+    if (!$stmt) {
+        die("Error preparing statement: " . $conn->error);
+    }
+
+
     $stmt->bind_param("sssi", $firstName, $lastName, $username, $user_id);
 
-    if ($stmt->execute()) {
 
+    if ($stmt->execute()) {
         header("Location: admin.php");
         exit;
     } else {
         echo "Error updating user: " . $stmt->error;
     }
-
-    $stmt->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -41,9 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Olympic+Sans&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/logo.png">
 
     <style>
         body {
@@ -51,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .navbar {
+            background-color: #FFB114;
             border-bottom-width: 2px;
             border-bottom-color: black;
             border-bottom-style: solid;
@@ -81,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .sidebar .profile img {
+            margin-top: 10px;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -155,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-md-9 content my-5">
                 <h1>Edit User</h1>
                 <form action="edit_user.php" method="POST">
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user['id']); ?>">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']); ?>">
 
                     <div class="mb-3">
                         <label for="firstName" class="form-label">First Name:</label>

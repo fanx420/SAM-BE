@@ -2,36 +2,48 @@
 session_start();
 include 'connect.php';
 
-if (empty($_SESSION['userName'])) {
+if (empty($_SESSION['userName'] || empty($_SESSION['role'] || empty($_SESSION['password'])))) {
     header("Location: login.php");
     exit;
 }
-$tasks = [];
-$userName = $_SESSION['userName'];
 
-$sql = "SELECT id FROM tbl_user WHERE userName = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('s', $userName);
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($userId);
-$stmt->fetch();
+$sql = "SELECT id, userName  FROM tbl_user WHERE role = 'user' ";
+$result = executeQuery($sql);
+$users = $result->fetch_all(MYSQLI_ASSOC);
 
-if ($userId > 0) {
-    $sql = "SELECT * FROM tbl_task WHERE user_id = ? AND status = 'completed'";
+if (isset($_POST['submit'])) {
+    $task_name = $_POST['taskName'];  
+    $task_description = $_POST['taskDescription'];  
+    $userName = $_POST['userName'];  
+    $status = $_POST['status'];
+
+
+    $sql = "SELECT id FROM tbl_user WHERE userName = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $userId);
+    $stmt->bind_param("s", $userName);  
     $stmt->execute();
     $result = $stmt->get_result();
-
+    
     if ($result->num_rows > 0) {
-        $tasks = $result->fetch_all(MYSQLI_ASSOC);
+
+        $row = $result->fetch_assoc();
+        $userId = $row['id'];
+
+
+        $sql = "INSERT INTO tbl_task (taskName, taskDescription, user_id, status) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssis", $task_name, $task_description, $userId, $status); 
+        $stmt->execute();
+        
+        if ($stmt->affected_rows > 0) {
+            echo "<script type='text/javascript'>alert('Task successfully added!');</script>";
+        } else {
+            echo "<script type='text/javascript'>alert('Failed to add task.');</script>";
+        }
+    } else {
+        echo "<script type='text/javascript'>alert('User not found.');</script>";
     }
-} else {
-    echo " script>alert('Invalid user.')</script>"; 
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,12 +88,12 @@ if ($userId > 0) {
         }
 
         .sidebar .profile {
-            margin-top: 10px;
             text-align: center;
             margin-bottom: 20px;
         }
 
         .sidebar .profile img {
+            margin-top: 10px;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -113,6 +125,25 @@ if ($userId > 0) {
             text-align: center;
         }
 
+        .card {
+            top: 100px;
+            right: 50px
+        }
+
+        @media screen and (max-width: 1200px) {
+            .card {
+                top: 100px;
+                right: 0px
+            }
+        }
+
+        @media screen and (max-width: 850px) {
+            .card {
+                top: 100px;
+                right: 0px
+            }
+        }
+
         @media screen and (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -122,6 +153,11 @@ if ($userId > 0) {
 
             .content {
                 margin-left: 0;
+            }
+
+            .card {
+                top: 0px;
+                right: 0px
             }
         }
     </style>
@@ -145,35 +181,51 @@ if ($userId > 0) {
                     <p>Hello <?php echo $_SESSION['userName']; ?></p>
                 </div>
                 <div class="menu my-5">
-                    <a href="user_dashboard.php">Tasks</a>
-                    <a href="completed.php" class="active">Completed</a>
-                    <a href="dropped.php">Dropped</a>
+                    <a href="admin.php">Users</a>
+                    <a href="add_task.php" class="active">Add task</a>
                 </div>
 
                 <a href="logout.php" class="btn btn-danger logout-btn">Logout</a>
             </div>
 
 
-            <div class="col-md-9 content my-5">
-                <h2 class="fw-bold mt-3">Completed</h2>
-                <div class="row">
-                    <?php if (count($tasks) > 0): ?>
-                        <?php foreach ($tasks as $task): ?>
-                            <div class="col-md-4 mb-4">
-                                <div class="card shadow-sm" style="background-color:  #00A651;">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?php echo htmlspecialchars($task['taskName']); ?></h5>
-                                        <p class="card-text"><?php echo htmlspecialchars($task['taskDescription']); ?></p>
-
-                                    </div>
+            <div class="container my-5">
+                <div class="row justify-content-end allign-items-center">
+                    <div class="col-md-9">
+                        <div class="card shadow-lg p-4">
+                            <h2 class="text-center mb-4">Add New Task</h2>
+                            <form action="add_task.php" method="POST">
+                                <div class="form-group mb-3">
+                                    <input type="hidden" name="status"value="pending">
+                                    <label for="task_name" class="form-label">Task Name:</label>
+                                    <input type="text" class="form-control" name="taskName"  required>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No tasks assigned.</p>
-                    <?php endif; ?>
+
+                                <div class="form-group mb-3">
+                                    <label for="task_description" class="form-label">Task Description:</label>
+                                    <textarea class="form-control" name="taskDescription" rows="4" required></textarea>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="username" class="form-label">Assign User:</label>
+                                    <select  class="form-control" name="userName" id="username">
+                                        <option value="">--Select User--</option>
+                                        <?php
+                                        foreach ($users as $user): ?>
+                                            <option value="<?= $user['userName']; ?>"><?= $user['userName']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" name="submit" class="btn btn-primary">Add Task</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
