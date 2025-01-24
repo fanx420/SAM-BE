@@ -6,6 +6,10 @@ if (empty($_SESSION['userName'] || empty($_SESSION['role'] || empty($_SESSION['p
     header("Location: login.php");
     exit;
 }
+if($_SESSION['role'] != 'admin'){
+    header('Location: login.php');
+    echo '<script type="text/javascript">alert("You are not an admin")</script>';
+}
 
 $dataSql = "SELECT id, firstName, lastName, userName, dateCreated FROM tbl_user WHERE role = 'user'";
 $result = executeQuery($dataSql);
